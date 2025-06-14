@@ -8,11 +8,19 @@ public class GameManager : MonoBehaviour
 {
     bool gamehasEnded = false;
     public int score = 0;
-    public TextMeshProUGUI scoreText;  // Changed to TextMeshProUGUI
+    public TextMeshProUGUI scoreText;  
+    public GameObject LevelCompletePanel;
+    public TextMeshProUGUI completeText;  // New text for level completion message
 
     void Start()
     {
         UpdateScoreText();
+    
+        if (LevelCompletePanel != null)
+        {
+            LevelCompletePanel.SetActive(false);
+            completeText.gameObject.SetActive(false);
+        }
     }
 
     public void AddScore(int points)
@@ -40,5 +48,31 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
+    }
+
+    public void LevelComplete()
+    {
+        // Show the level complete panel
+        if (LevelCompletePanel != null)
+        {
+            LevelCompletePanel.SetActive(true);
+        }
+
+        // Update completion text
+        if (completeText != null)
+        {   
+            completeText.text = "Level Complete!\nFinal Score: " + score;
+            completeText.gameObject.SetActive(true);
+        }
+
+        // Disable player movement
+        PlayerMovement playerMovement = FindObjectOfType<PlayerMovement>();
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = false;
+        }
+
+        // Pause the game
+        Time.timeScale = 0f;
     }
 }
